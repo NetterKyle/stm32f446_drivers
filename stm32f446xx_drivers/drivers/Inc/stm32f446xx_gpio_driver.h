@@ -63,7 +63,7 @@ typedef struct
  * GPIO pin output types
  */
 #define GPIO_OP_TYPE_PP			0
-#define GPIO_OP_TYPE_OO			1
+#define GPIO_OP_TYPE_OD			1
 
 /*
  * @GPIO_PIN_SPEEDS
