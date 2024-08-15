@@ -34,15 +34,15 @@
  * AHB1 peripheral base addresses
  */
 
-#define GPIOA_BASEADDR                                  (AHB1_BASEADDR + 0x0000)
-#define GPIOB_BASEADDR                                  (AHB1_BASEADDR + 0x0400)
-#define GPIOC_BASEADDR                                  (AHB1_BASEADDR + 0x0800)
-#define GPIOD_BASEADDR                                  (AHB1_BASEADDR + 0x0C00)
-#define GPIOE_BASEADDR                                  (AHB1_BASEADDR + 0x1000)
-#define GPIOF_BASEADDR                                  (AHB1_BASEADDR + 0x1400)
-#define GPIOG_BASEADDR                                  (AHB1_BASEADDR + 0x1800)
-#define GPIOH_BASEADDR                                  (AHB1_BASEADDR + 0x1C00)
-#define RCC_BASEADDR                                    (AHB1_BASEADDR + 0x3800)
+#define GPIOA_BASEADDR                                  (AHB1PERIPH_BASEADDR + 0x0000)
+#define GPIOB_BASEADDR                                  (AHB1PERIPH_BASEADDR + 0x0400)
+#define GPIOC_BASEADDR                                  (AHB1PERIPH_BASEADDR + 0x0800)
+#define GPIOD_BASEADDR                                  (AHB1PERIPH_BASEADDR + 0x0C00)
+#define GPIOE_BASEADDR                                  (AHB1PERIPH_BASEADDR + 0x1000)
+#define GPIOF_BASEADDR                                  (AHB1PERIPH_BASEADDR + 0x1400)
+#define GPIOG_BASEADDR                                  (AHB1PERIPH_BASEADDR + 0x1800)
+#define GPIOH_BASEADDR                                  (AHB1PERIPH_BASEADDR + 0x1C00)
+#define RCC_BASEADDR                                    (AHB1PERIPH_BASEADDR + 0x3800)
 /*
  * APB1 peripheral base addresses
  */
@@ -60,11 +60,11 @@
  * APB2 peripheral base addresses
  */
 
-#define USART1_BASEADDR                                 (APB2_BASEADDR + 0X1000)
-#define USART6_BASEADDR                                 (APB2_BASEADDR + 0X1400)
-#define SPI1_BASEADDR                                   (APB2_BASEADDR + 0X3000)
-#define SYSCFG_BASEADDR                                 (APB2_BASEADDR + 0X3800)
-#define EXTI_BASEADDR                                   (APB2_BASEADDR + 0X3C00)
+#define USART1_BASEADDR                                 (APB2PERIPH_BASEADDR + 0X1000)
+#define USART6_BASEADDR                                 (APB2PERIPH_BASEADDR + 0X1400)
+#define SPI1_BASEADDR                                   (APB2PERIPH_BASEADDR + 0X3000)
+#define SYSCFG_BASEADDR                                 (APB2PERIPH_BASEADDR + 0X3800)
+#define EXTI_BASEADDR                                   (APB2PERIPH_BASEADDR + 0X3C00)
 
 /*
  * Generic GPIO struct
@@ -126,19 +126,19 @@ typedef struct
 /*
  * Peripheral definitions
  */
-#define GPIOA                           ((GPIO_RegDef_t*) GPIOA_BASEADDR))
-#define GPIOB                           ((GPIO_RegDef_t*) GPIOB_BASEADDR))
-#define GPIOC                           ((GPIO_RegDef_t*) GPIOC_BASEADDR))
-#define GPIOD                           ((GPIO_RegDef_t*) GPIOD_BASEADDR))
-#define GPIOE                           ((GPIO_RegDef_t*) GPIOE_BASEADDR))
-#define GPIOF                           ((GPIO_RegDef_t*) GPIOF_BASEADDR))
-#define GPIOG                           ((GPIO_RegDef_t*) GPIOG_BASEADDR))
-#define GPIOH                           ((GPIO_RegDef_t*) GPIOH_BASEADDR))
+#define GPIOA                           ((GPIO_RegDef_t*) GPIOA_BASEADDR)
+#define GPIOB                           ((GPIO_RegDef_t*) GPIOB_BASEADDR)
+#define GPIOC                           ((GPIO_RegDef_t*) GPIOC_BASEADDR)
+#define GPIOD                           ((GPIO_RegDef_t*) GPIOD_BASEADDR)
+#define GPIOE                           ((GPIO_RegDef_t*) GPIOE_BASEADDR)
+#define GPIOF                           ((GPIO_RegDef_t*) GPIOF_BASEADDR)
+#define GPIOG                           ((GPIO_RegDef_t*) GPIOG_BASEADDR)
+#define GPIOH                           ((GPIO_RegDef_t*) GPIOH_BASEADDR)
 
 /*
  * Clock definition
  */
-#define RCC                                     ((RCC_RegDef_t*) RCC_BASEADDR))
+#define RCC                     ((RCC_RegDef_t*) RCC_BASEADDR)
 
 /*
  * GPIO clock enable registers
@@ -155,20 +155,20 @@ typedef struct
 /*
  * I2C clock enable registers
  */
-#define I2C1_PCLK_EN()          (RCC->APB1ENR |= 1 << 21)
-#define I2C2_PCLK_EN()          (RCC->APB1ENR |= 1 << 22)
-#define I2C3_PCLK_EN()          (RCC->APB1ENR |= 1 << 23)
+#define I2C1_PCLK_EN()          (RCC->APB1ENR |= (1 << 21))
+#define I2C2_PCLK_EN()          (RCC->APB1ENR |= (1 << 22))
+#define I2C3_PCLK_EN()          (RCC->APB1ENR |= (1 << 23))
 
 /*
  * SPI clock enable registers
  */
-#define SPI1_PCLK_EN()          (RCC->APB2ENR |= 1 << 12)
+#define SPI1_PCLK_EN()          (RCC->APB2ENR |= (1 << 12))
 
 /*
  * USART clock enable registers
  */
-#define USART1_PCLK_EN()                (RCC->APB2ENR |= 1 << 4)
-#define USART6_PCLK_EN()                (RCC->APB2ENR |= 1 << 5)
+#define USART1_PCLK_EN()                (RCC->APB2ENR |= (1 << 4))
+#define USART6_PCLK_EN()                (RCC->APB2ENR |= (1 << 5))
 
 /*
  * SYSCFG clock enable register
@@ -190,24 +190,42 @@ typedef struct
 /*
  * I2C clock disable registers
  */
-#define I2C1_PCLK_DI()          (RCC->APB1ENR &= ~1 << 21)
-#define I2C2_PCLK_DI()          (RCC->APB1ENR &= ~1 << 22)
-#define I2C3_PCLK_DI()          (RCC->APB1ENR &= ~1 << 23)
+#define I2C1_PCLK_DI()          (RCC->APB1ENR &= ~(1 << 21))
+#define I2C2_PCLK_DI()          (RCC->APB1ENR &= ~(1 << 22))
+#define I2C3_PCLK_DI()          (RCC->APB1ENR &= ~(1 << 23))
 
 /*
  * SPI clock disable registers
  */
-#define SPI1_PCLK_DI()          (RCC->APB2ENR &= ~1 << 12)
+#define SPI1_PCLK_DI()          (RCC->APB2ENR &= ~(1 << 12))
 
 /*
  * USART clock disable registers
  */
-#define USART1_PCLK_DI()                (RCC->APB2ENR &= ~1 << 4)
-#define USART6_PCLK_DI()                (RCC->APB2ENR &= ~1 << 5)
+#define USART1_PCLK_DI()                (RCC->APB2ENR &= ~(1 << 4))
+#define USART6_PCLK_DI()                (RCC->APB2ENR &= ~(1 << 5))
 
 /*
  * SYSCFG clock disable register
  */
-#define SYSCFG_PCLK_DI()                (RCC->APB2ENR &= ~1 << 14)
+#define SYSCFG_PCLK_DI()                (RCC->APB2ENR &= ~(1 << 14))
+
+#define GPIOA_REG_RESET()				do{(RCC->AHB1RSTR |= (1 << 0));	(RCC->AHB1RSTR &= ~(1 << 0));}while(0)
+#define GPIOB_REG_RESET()				do{(RCC->AHB1RSTR |= (1 << 1));	(RCC->AHB1RSTR &= ~(1 << 1));}while(0)
+#define GPIOC_REG_RESET()				do{(RCC->AHB1RSTR |= (1 << 2));	(RCC->AHB1RSTR &= ~(1 << 2));}while(0)
+#define GPIOD_REG_RESET()				do{(RCC->AHB1RSTR |= (1 << 3));	(RCC->AHB1RSTR &= ~(1 << 3));}while(0)
+#define GPIOE_REG_RESET()				do{(RCC->AHB1RSTR |= (1 << 4));	(RCC->AHB1RSTR &= ~(1 << 4));}while(0)
+#define GPIOF_REG_RESET()				do{(RCC->AHB1RSTR |= (1 << 5));	(RCC->AHB1RSTR &= ~(1 << 5));}while(0)
+#define GPIOG_REG_RESET()				do{(RCC->AHB1RSTR |= (1 << 6));	(RCC->AHB1RSTR &= ~(1 << 6));}while(0)
+#define GPIOH_REG_RESET()				do{(RCC->AHB1RSTR |= (1 << 7));	(RCC->AHB1RSTR &= ~(1 << 7));}while(0)
+
+#define ENABLE 			0
+#define DISABLE 		1
+#define SET 			ENABLE
+#define RESET			DISABLE
+#define GPIO_PIN_SET 	SET
+#define GPIO_PIN_RESET 	RESET
+
+#include "stm32f446xx_gpio_driver.h"
 
 #endif /* INC_STM32F446_H_ */
