@@ -10,6 +10,30 @@
 
 #include<stdint.h>
 #define __vo volatile
+
+/*
+ * Processor specific details
+ */
+
+/*
+ * Processor NVIC set interrupt register addresses
+ */
+#define NVIC_ISER0			((__vo uint32_t*) 0xE000E100)
+#define NVIC_ISER1			((__vo uint32_t*) 0xE000E104)
+#define NVIC_ISER2			((__vo uint32_t*) 0xE000E108)
+#define NVIC_ISER3			((__vo uint32_t*) 0xE000E10C)
+
+/*
+ * Processor NVIC clear interrupt register addresses
+ */
+#define NVIC_ICER0										((__vo uint32_t*) 0xE000E180)
+#define NVIC_ICER1										((__vo uint32_t*) 0xE000E184)
+#define NVIC_ICER2										((__vo uint32_t*) 0xE000E188)
+#define NVIC_ICER3										((__vo uint32_t*) 0xE000E18C)
+
+#define NVIC_PR_BASE_ADDR								((__vo uint32_t*) 0xE000E400)
+
+#define NO_PR_BITS_IMPLEMENTED							4
 /*
  * Memory base addresses
  */
@@ -124,6 +148,33 @@ typedef struct
 } RCC_RegDef_t;
 
 /*
+ * EXTI (external interrupt event) struct
+ */
+typedef struct
+{
+        __vo uint32_t IMR; // Interrupt mask register
+        __vo uint32_t EMR; // Event mask register
+        __vo uint32_t RTSR; // Rising trigger selection register
+        __vo uint32_t FTSR; // Falling trigger selection register
+        __vo uint32_t SWIER; // Software interrupt event register
+        __vo uint32_t PR; // Pending register
+} EXTI_RegDef_t;
+
+/*
+ * SYSCFG struct
+ */
+typedef struct
+{
+        __vo uint32_t MEMRMP;
+        __vo uint32_t PMC;
+        __vo uint32_t EXTICR[4];
+        uint32_t RESERVED1[2]; // Not mentioned in the documentation??
+        __vo uint32_t CMPCR;
+        uint32_t RESERVED2[2]; // Also not mentioned in the documentation?????
+        __vo uint32_t CFGR; // Configuration register
+} SYSCFG_RegDef_t;
+
+/*
  * Peripheral definitions
  */
 #define GPIOA                           ((GPIO_RegDef_t*) GPIOA_BASEADDR)
@@ -140,6 +191,9 @@ typedef struct
  */
 #define RCC                     ((RCC_RegDef_t*) RCC_BASEADDR)
 
+#define EXTI 					((EXTI_RegDef_t*) EXTI_BASEADDR)
+
+#define SYSCFG					((SYSCFG_RegDef_t*) SYSCFG_BASEADDR)
 /*
  * GPIO clock enable registers
  */
@@ -173,7 +227,7 @@ typedef struct
 /*
  * SYSCFG clock enable register
  */
-#define SYSCFG_PCLK_EN()                (RCC->APB2ENR |= 1 << 14)
+#define SYSCFG_PCLK_EN()                (RCC->APB2ENR |= (1 << 14))
 
 /*
  * GPIO clock disable registers
@@ -218,6 +272,35 @@ typedef struct
 #define GPIOF_REG_RESET()				do{(RCC->AHB1RSTR |= (1 << 5));	(RCC->AHB1RSTR &= ~(1 << 5));}while(0)
 #define GPIOG_REG_RESET()				do{(RCC->AHB1RSTR |= (1 << 6));	(RCC->AHB1RSTR &= ~(1 << 6));}while(0)
 #define GPIOH_REG_RESET()				do{(RCC->AHB1RSTR |= (1 << 7));	(RCC->AHB1RSTR &= ~(1 << 7));}while(0)
+
+#define GPIO_BASE_ADDR_TO_CODE(x)		((x == GPIOA) ? 0 :\
+										(x == GPIOB) ? 1 :\
+										(x == GPIOC) ? 2 :\
+										(x == GPIOD) ? 3 :\
+										(x == GPIOE) ? 4 :\
+										(x == GPIOF) ? 5 :\
+										(x == GPIOG) ? 6 :\
+										(x == GPIOH) ? 7 : 0 )
+/*
+ * IRQ external interrupt position numbers
+ */
+
+
+#define IRQ_NO_EXTI0					6
+#define IRQ_NO_EXTI1					7
+#define IRQ_NO_EXTI2					8
+#define IRQ_NO_EXTI3					9
+#define IRQ_NO_EXTI4					10
+#define IRQ_NO_EXTI9_5					23
+#define IRQ_NO_EXTI15_10				40
+
+/*
+ * NVIC interrrupt priority levels
+ */
+#define NVIC_IRQ_PRI0 					0
+#define NVIC_IRQ_PRI15					15
+
+
 
 #define ENABLE 			0
 #define DISABLE 		1

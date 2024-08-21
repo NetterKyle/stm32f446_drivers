@@ -56,6 +56,30 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 		pGPIOHandle->pGPIOx->MODER &= ~(0x3 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
 		pGPIOHandle->pGPIOx->MODER |= temp;
 		temp = 0;
+	}else
+	{
+		if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_FT)
+		{
+			EXTI->FTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI->RTSR &= ~(1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+
+		}else if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RT)
+		{
+			EXTI->RTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI->FTSR &= ~(1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+
+		}else if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RFT)
+		{
+			EXTI->RTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI->FTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+		}
+
+		uint8_t temp1 = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber / 4;
+		uint8_t temp2 = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber % 4;
+		uint8_t portcode = GPIO_BASE_ADDR_TO_CODE(pGPIOHandle->pGPIOx);
+		SYSCFG_PCLK_EN();
+		SYSCFG->EXTICR[temp1] = portcode << (temp2 * 4);
+		EXTI->IMR |= 1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber;
 	}
 
 	temp = 0;
@@ -151,7 +175,48 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 /*
  * IRW Configuration and ISR handling
  */
-void GPIO_IRQConfig(uint8_t IRQNUmber, uint8_t IRQPriority, uint8_t EnorDi);
-void GPIO_IRQHandling(uint8_t PinNumber);
+void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi)
+{
+	if (EnorDi == ENABLE)
+	{
+		if (IRQNumber <= 31)
+		{
+			*NVIC_ISER0 |= (1 << IRQNumber);
+		}else if(IRQNumber > 31 && IRQNumber < 64)
+		{
+			*NVIC_ISER1 |= (1 << (IRQNumber % 32));
+		}else if(IRQNumber > 64 && IRQNumber < 96)
+		{
+			*NVIC_ISER2 |= (1 << (IRQNumber % 64));
+		}
+	}else
+	{
+		if (IRQNumber <= 31)
+		{
+			*NVIC_ICER0 |= (1 << IRQNumber);
+		}else if(IRQNumber > 31 && IRQNumber < 64)
+		{
+			*NVIC_ICER1 |= (1 << (IRQNumber % 32));
+		}else if(IRQNumber > 64 && IRQNumber < 96)
+		{
+			*NVIC_ICER2 |= (1 << (IRQNumber % 64));
+		}
+	}
+}
+
+void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority)
+{
+	uint8_t iprx = IRQNumber / 4; // Find register number
+	uint8_t iprx_section = IRQNumber % 4; // Find section number in register (4 sections per register)
+	uint8_t shift_amount = (8 * iprx_section ) + (8 - NO_PR_BITS_IMPLEMENTED); // For each section, the non-implemented bits (based on MCU) ignore writes
+	*(NVIC_PR_BASE_ADDR + iprx) |= (IRQPriority << shift_amount);
+}
+void GPIO_IRQHandling(uint8_t PinNumber)
+{
+	if (EXTI->PR & (1 << PinNumber))
+	{
+		EXTI->PR |= (1 << PinNumber);
+	}
+}
 
 
