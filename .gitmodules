@@ -1,0 +1,3 @@
+[submodule "MasteringMCU"]
+	path = MasteringMCU
+	url = https://github.com/niekiran/MasteringMCU.git
